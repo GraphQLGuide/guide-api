@@ -1,0 +1,13 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "8.11.3"
+        }
+      }
+    ]
+  ],
+  "plugins": ["import-graphql"]
+}
