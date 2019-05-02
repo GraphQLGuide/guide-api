@@ -1,4 +1,5 @@
 import { ApolloServer, gql } from 'apollo-server'
+import { getAuthIdFromJWT } from './util/auth'
 
 const reviews = [
   {
@@ -10,8 +11,13 @@ const reviews = [
 const server = new ApolloServer({
   typeDefs: gql`
     type Query {
+      me: User
       hello: String!
       reviews: [Review!]!
+    }
+    type User {
+      firstName: String
+      lastName: String
     }
     type Review {
       text: String!
@@ -28,6 +34,7 @@ const server = new ApolloServer({
   `,
   resolvers: {
     Query: {
+      me: (_, __, context) => context.user,
       hello: () => '🌍🌏🌎',
       reviews: () => reviews
     },
@@ -43,6 +50,20 @@ const server = new ApolloServer({
         return review
       }
     }
+  },
+  context: async ({ req }) => {
+    const context = {}
+
+    const jwt = req.headers.authorization
+    const authId = await getAuthIdFromJWT(jwt)
+    if (authId === 'github|1615') {
+      context.user = {
+        firstName: 'John',
+        lastName: 'Resig'
+      }
+    }
+
+    return context
   }
 })
 
