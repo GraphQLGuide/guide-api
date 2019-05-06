@@ -1,12 +1,7 @@
 import { ApolloServer, gql } from 'apollo-server'
 import { getAuthIdFromJWT } from './util/auth'
-
-const reviews = [
-  {
-    text: 'Super-duper book.',
-    stars: 5
-  }
-]
+import Reviews from './data-sources/Reviews'
+import { db } from './db'
 
 const server = new ApolloServer({
   typeDefs: gql`
@@ -36,7 +31,7 @@ const server = new ApolloServer({
     Query: {
       me: (_, __, context) => context.user,
       hello: () => '🌍🌏🌎',
-      reviews: () => reviews
+      reviews: (_, __, { dataSources }) => dataSources.reviews.all()
     },
     Review: {
       fullReview: review =>
@@ -51,6 +46,9 @@ const server = new ApolloServer({
       }
     }
   },
+  dataSources: () => ({
+    reviews: new Reviews(db.collection('reviews'))
+  }),
   context: async ({ req }) => {
     const context = {}
 
