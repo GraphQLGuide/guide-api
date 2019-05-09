@@ -1,68 +1,14 @@
-import { ApolloServer, gql } from 'apollo-server'
-import { getAuthIdFromJWT } from './util/auth'
-import Reviews from './data-sources/Reviews'
-import { db } from './db'
+import { ApolloServer } from 'apollo-server'
+import typeDefs from './schema/schema.graphql'
+import resolvers from './resolvers'
+import dataSources from './data-sources'
+import context from './context'
 
 const server = new ApolloServer({
-  typeDefs: gql`
-    type Query {
-      me: User
-      hello: String!
-      reviews: [Review!]!
-    }
-    type User {
-      firstName: String
-      lastName: String
-    }
-    type Review {
-      text: String!
-      stars: Int
-      fullReview: String!
-    }
-    type Mutation {
-      createReview(review: CreateReviewInput!): Review
-    }
-    input CreateReviewInput {
-      text: String!
-      stars: Int
-    }
-  `,
-  resolvers: {
-    Query: {
-      me: (_, __, context) => context.user,
-      hello: () => '🌍🌏🌎',
-      reviews: (_, __, { dataSources }) => dataSources.reviews.all()
-    },
-    Review: {
-      fullReview: review =>
-        `Someone on the internet gave ${review.stars} stars, saying: "${
-          review.text
-        }"`
-    },
-    Mutation: {
-      createReview: (_, { review }) => {
-        reviews.push(review)
-        return review
-      }
-    }
-  },
-  dataSources: () => ({
-    reviews: new Reviews(db.collection('reviews'))
-  }),
-  context: async ({ req }) => {
-    const context = {}
-
-    const jwt = req.headers.authorization
-    const authId = await getAuthIdFromJWT(jwt)
-    if (authId === 'github|1615') {
-      context.user = {
-        firstName: 'John',
-        lastName: 'Resig'
-      }
-    }
-
-    return context
-  }
+  typeDefs,
+  resolvers,
+  dataSources,
+  context
 })
 
 server

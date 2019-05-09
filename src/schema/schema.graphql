@@ -1,0 +1,7 @@
+type Query {
+  hello: String!
+}
+
+# import Review first
+#import 'Review.graphql'
+#import 'User.graphql'
