@@ -6,3 +6,15 @@ type User {
 extend type Query {
   me: User
 }
+
+extend type Mutation {
+  createUser(user: CreateUserInput!, secretKey: String!): User
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  authId: String!
+}
