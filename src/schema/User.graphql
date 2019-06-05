@@ -1,6 +1,12 @@
 type User {
-  firstName: String
-  lastName: String
+  id: ID!
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  photo: String!
+  createdAt: Date!
+  updatedAt: Date!
 }
 
 extend type Query {

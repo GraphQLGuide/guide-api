@@ -1,15 +1,14 @@
 import { getAuthIdFromJWT } from './util/auth'
+import { db } from './db'
 
 export default async ({ req }) => {
   const context = {}
 
   const jwt = req.headers.authorization
   const authId = await getAuthIdFromJWT(jwt)
-  if (authId === 'github|1615') {
-    context.user = {
-      firstName: 'John',
-      lastName: 'Resig'
-    }
+  const user = await db.collection('users').findOne({ authId })
+  if (user) {
+    context.user = user
   }
 
   return context
