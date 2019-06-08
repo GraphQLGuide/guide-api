@@ -11,6 +11,7 @@ type User {
 
 extend type Query {
   me: User
+  user(id: ID!): User
 }
 
 extend type Mutation {
