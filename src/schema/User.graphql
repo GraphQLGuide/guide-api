@@ -3,7 +3,7 @@ type User {
   firstName: String!
   lastName: String!
   username: String!
-  email: String!
+  email: String
   photo: String!
   createdAt: Date!
   updatedAt: Date!
