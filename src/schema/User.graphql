@@ -12,6 +12,7 @@ type User {
 extend type Query {
   me: User
   user(id: ID!): User
+  searchUsers(term: String!): [UserResult!]!
 }
 
 extend type Mutation {
@@ -25,3 +26,16 @@ input CreateUserInput {
   email: String!
   authId: String!
 }
+
+type DeletedUser {
+  username: String!
+  deletedAt: Date!
+}
+
+type SuspendedUser {
+  username: String!
+  reason: String!
+  daysLeft: Int!
+}
+
+union UserResult = User | DeletedUser | SuspendedUser

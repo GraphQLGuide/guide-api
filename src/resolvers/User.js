@@ -1,11 +1,31 @@
 import { AuthenticationError, ForbiddenError } from 'apollo-server'
 import { ObjectId } from 'mongodb'
+import { addDays, differenceInDays } from 'date-fns'
 
 export default {
   Query: {
     me: (_, __, context) => context.user,
     user: (_, { id }, { dataSources }) =>
-      dataSources.users.findOneById(ObjectId(id))
+      dataSources.users.findOneById(ObjectId(id)),
+    searchUsers: (_, { term }, { dataSources }) =>
+      dataSources.users.search(term)
+  },
+  UserResult: {
+    __resolveType: result => {
+      if (result.deletedAt) {
+        return 'DeletedUser'
+      } else if (result.suspendedAt) {
+        return 'SuspendedUser'
+      } else {
+        return 'User'
+      }
+    }
+  },
+  SuspendedUser: {
+    daysLeft: user => {
+      const end = addDays(user.suspendedAt, user.durationInDays)
+      return differenceInDays(end, new Date())
+    }
   },
   User: {
     id: ({ _id }) => _id,
