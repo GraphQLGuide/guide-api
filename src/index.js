@@ -4,12 +4,14 @@ import typeDefs from './schema/schema.graphql'
 import resolvers from './resolvers'
 import dataSources from './data-sources'
 import context from './context'
+import formatError from './formatError'
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   dataSources,
-  context
+  context,
+  formatError
 })
 
 server
