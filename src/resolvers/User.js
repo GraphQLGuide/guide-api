@@ -1,12 +1,30 @@
-import { AuthenticationError, ForbiddenError } from 'apollo-server'
+import {
+  AuthenticationError,
+  ForbiddenError,
+  UserInputError
+} from 'apollo-server'
 import { ObjectId } from 'mongodb'
 import { addDays, differenceInDays } from 'date-fns'
+
+const OBJECT_ID_ERROR =
+  'Argument passed in must be a single String of 12 bytes or a string of 24 hex characters'
 
 export default {
   Query: {
     me: (_, __, context) => context.user,
-    user: (_, { id }, { dataSources }) =>
-      dataSources.users.findOneById(ObjectId(id)),
+    user: (_, { id }, { dataSources }) => {
+      try {
+        return dataSources.users.findOneById(ObjectId(id))
+      } catch (error) {
+        if (error.message === OBJECT_ID_ERROR) {
+          throw new UserInputError('invalid id', {
+            invalidArgs: ['id']
+          })
+        } else {
+          throw error
+        }
+      }
+    },
     searchUsers: (_, { term }, { dataSources }) =>
       dataSources.users.search(term)
   },
