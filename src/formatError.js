@@ -1,5 +1,7 @@
 import get from 'lodash/get'
 
+import { InternalServerError } from './util/errors'
+
 const inProduction = process.env.NODE_ENV === 'production'
 
 export default error => {
@@ -12,7 +14,7 @@ export default error => {
 
   const name = get(error, 'extensions.exception.name') || ''
   if (name.startsWith('Mongo')) {
-    return new Error('Internal server error')
+    return new InternalServerError()
   } else {
     return error
   }
