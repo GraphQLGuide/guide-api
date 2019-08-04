@@ -1,11 +1,12 @@
 import { AuthenticationError } from 'apollo-server'
+
 import { getAuthIdFromJWT } from './util/auth'
 import { db } from './db'
 
 export default async ({ req }) => {
   const context = {}
 
-  const jwt = req.headers.authorization
+  const jwt = req && req.headers.authorization
   let authId
 
   if (jwt) {
