@@ -2,6 +2,7 @@ import { ForbiddenError } from 'apollo-server'
 import { isEmpty } from 'lodash'
 
 import { InputError } from '../util/errors'
+import { pubsub } from '../util/pubsub'
 
 const MIN_REVIEW_LENGTH = 2
 const VALID_STARS = [0, 1, 2, 3, 4, 5]
@@ -42,7 +43,16 @@ export default {
         throw new InputError({ review: errors })
       }
 
-      return dataSources.reviews.create(review)
+      const newReview = dataSources.reviews.create(review)
+
+      pubsub.publish('reviewCreated', {
+        reviewCreated: newReview
+      })
+
+      return newReview
     }
+  },
+  Subscription: {
+    reviewCreated: { subscribe: () => pubsub.asyncIterator('reviewCreated') }
   }
 }

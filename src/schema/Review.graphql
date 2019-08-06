@@ -20,3 +20,7 @@ input CreateReviewInput {
   text: String!
   stars: Int
 }
+
+type Subscription {
+  reviewCreated: Review!
+}

@@ -1,3 +1,3 @@
-type Subscription {
+extend type Subscription {
   githubStars: Int!
 }
