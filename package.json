@@ -6,10 +6,16 @@
     "dev": "nodemon -e js,graphql --exec 'npm run update-graphql-imports && babel-node src/index.js'",
     "start": "node dist/index.js",
     "build": "babel src -d dist --ignore **/*.test.js",
-    "update-graphql-imports": "rm -rf ./node_modules/.cache/@babel"
+    "update-graphql-imports": "rm -rf ./node_modules/.cache/@babel",
+    "lint": "eslint src/"
   },
   "engines": {
     "node": ">=8"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
   },
   "dependencies": {
     "apollo-datasource-mongodb": "0.2.0",
