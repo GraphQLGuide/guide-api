@@ -59,7 +59,7 @@ test('searchUsers', async () => {
   const userB = { _id: 'B' }
   const { server, dataSources } = createTestServer()
 
-  dataSources.users.users.find.mockReturnValueOnce({
+  dataSources.users.collection.find.mockReturnValueOnce({
     toArray: jest.fn().mockResolvedValue([userA, userB])
   })
 
@@ -70,7 +70,7 @@ test('searchUsers', async () => {
     variables: { term: 'foo' }
   })
 
-  expect(dataSources.users.users.find).toHaveBeenCalledWith({
+  expect(dataSources.users.collection.find).toHaveBeenCalledWith({
     $text: { $search: 'foo' }
   })
   expect(result.data.searchUsers[0].id).toEqual('A')
