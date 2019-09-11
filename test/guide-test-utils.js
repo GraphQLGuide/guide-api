@@ -1,13 +1,19 @@
 import { ApolloServer } from 'apollo-server'
 import { ObjectId } from 'mongodb'
+import { promisify } from 'util'
+import { HttpLink } from 'apollo-link-http'
+import fetch from 'node-fetch'
+import { execute, toPromise } from 'apollo-link'
 
 import { Reviews, Users } from '../src/data-sources/'
 import {
+  server,
   typeDefs,
   resolvers,
   context as defaultContext,
   formatError
 } from '../src/'
+import { connectToDB } from '../src/db'
 
 const updatedAt = new Date('2020-01-01')
 
@@ -70,6 +76,25 @@ export const createTestServer = ({ context = defaultContext } = {}) => {
   })
 
   return { server, dataSources: { reviews, users } }
+}
+
+export const startE2EServer = async () => {
+  const [e2eServer, dbClient] = await Promise.all([
+    server.listen({ port: 0 }),
+    connectToDB()
+  ])
+
+  const stopServer = promisify(e2eServer.server.close.bind(e2eServer.server))
+
+  const link = new HttpLink({
+    uri: e2eServer.url,
+    fetch
+  })
+
+  return {
+    stop: () => Promise.all([stopServer(), dbClient.close()]),
+    request: operation => toPromise(execute(link, operation))
+  }
 }
 
 export { createTestClient } from 'apollo-server-testing'

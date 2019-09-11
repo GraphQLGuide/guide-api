@@ -27,4 +27,4 @@ if (process.env.NODE_ENV !== 'test') {
   start()
 }
 
-export { typeDefs, resolvers, context, formatError }
+export { server, typeDefs, resolvers, context, formatError }
