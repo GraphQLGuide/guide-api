@@ -41,21 +41,24 @@ const reviewB = {
 
 const mockReviews = [reviewA, reviewB]
 
+const insertOne = jest.fn(
+  doc => (doc._id = new ObjectId('5cf8b6ff37568a1fa500ba4e'))
+)
+
 export const createTestServer = ({ context = defaultContext } = {}) => {
   const reviews = new Reviews({
     find: jest.fn(() => ({
       toArray: jest.fn().mockResolvedValue(mockReviews)
     })),
-    insertOne: jest.fn(
-      doc => (doc._id = new ObjectId('5cf8b6ff37568a1fa500ba4e'))
-    )
+    insertOne
   })
 
   const users = new Users({
     createIndex: jest.fn(),
     find: jest.fn(() => ({
       toArray: jest.fn().mockResolvedValue(mockUsers)
-    }))
+    })),
+    insertOne
   })
 
   const server = new ApolloServer({
