@@ -7,7 +7,8 @@ export default {
     fullReview: review =>
       `Someone on the internet gave ${review.stars} stars, saying: "${
         review.text
-      }"`
+      }"`,
+    createdAt: review => review._id.getTimestamp()
   },
   Mutation: {
     createReview: (_, { review }, { dataSources }) =>

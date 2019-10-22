@@ -1,5 +1,8 @@
+scalar Date
+
 type Query {
-  hello: String!
+  hello(date: Date): String!
+  isoString(date: Date!): String!
 }
 
 # import Review first

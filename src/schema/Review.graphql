@@ -3,6 +3,8 @@ type Review {
   text: String!
   stars: Int
   fullReview: String!
+  createdAt: Date!
+  updatedAt: Date!
 }
 
 extend type Query {

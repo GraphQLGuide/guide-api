@@ -6,6 +6,7 @@ export default class Reviews extends MongoDataSource {
   }
 
   create(review) {
+    review.updatedAt = new Date()
     this.collection.insertOne(review)
     return review
   }
