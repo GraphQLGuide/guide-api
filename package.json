@@ -8,7 +8,8 @@
     "build": "babel src -d dist --ignore **/*.test.js",
     "update-graphql-imports": "rm -rf ./node_modules/.cache/@babel",
     "lint": "eslint src/",
-    "test": "jest"
+    "test": "jest --coverage",
+    "open-coverage": "open coverage/lcov-report/index.html"
   },
   "engines": {
     "node": ">=8"
