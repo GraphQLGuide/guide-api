@@ -1,4 +1,5 @@
 type Review {
+  id: ID!
   text: String!
   stars: Int
   fullReview: String!

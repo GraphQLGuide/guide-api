@@ -3,15 +3,14 @@ export default {
     reviews: (_, __, { dataSources }) => dataSources.reviews.all()
   },
   Review: {
+    id: review => review._id,
     fullReview: review =>
       `Someone on the internet gave ${review.stars} stars, saying: "${
         review.text
       }"`
   },
   Mutation: {
-    createReview: (_, { review }) => {
-      reviews.push(review)
-      return review
-    }
+    createReview: (_, { review }, { dataSources }) =>
+      dataSources.reviews.create(review)
   }
 }
