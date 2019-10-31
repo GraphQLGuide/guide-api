@@ -19,7 +19,7 @@ const start = () => {
   connectToDB()
   Github.startPolling()
   server
-    .listen({ port: 4000 })
+    .listen({ port: process.env.PORT || 4000 })
     .then(({ url }) => console.log(`GraphQL server running at ${url}`))
 }
 
