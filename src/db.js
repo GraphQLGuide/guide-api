@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb'
 
 export let db
 
-const URL = 'mongodb://localhost:27017/guide'
+const URL = process.env.MONGO_URL || 'mongodb://localhost:27017/guide'
 
 export const connectToDB = async () => {
   const client = new MongoClient(URL, { useNewUrlParser: true })
