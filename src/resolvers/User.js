@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb'
 import { addDays, differenceInDays } from 'date-fns'
 
 import { InputError } from '../util/errors'
+import { USER_TTL } from '../util/redis'
 
 const OBJECT_ID_ERROR =
   'Argument passed in must be a single String of 12 bytes or a string of 24 hex characters'
@@ -12,7 +13,7 @@ export default {
     me: (_, __, context) => context.user,
     user: (_, { id }, { dataSources }) => {
       try {
-        return dataSources.users.findOneById(ObjectId(id))
+        return dataSources.users.findOneById(ObjectId(id), USER_TTL)
       } catch (error) {
         if (error.message === OBJECT_ID_ERROR) {
           throw new InputError({ id: 'not a valid Mongo ObjectId' })

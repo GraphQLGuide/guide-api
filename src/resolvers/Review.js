@@ -3,6 +3,7 @@ import { isEmpty } from 'lodash'
 
 import { InputError } from '../util/errors'
 import { pubsub } from '../util/pubsub'
+import { USER_TTL } from '../util/redis'
 
 const MIN_REVIEW_LENGTH = 2
 const VALID_STARS = [0, 1, 2, 3, 4, 5]
@@ -14,12 +15,13 @@ export default {
   Review: {
     id: review => review._id,
     author: (review, _, { dataSources }) =>
-      dataSources.users.findOneById(review.authorId),
+      dataSources.users.findOneById(review.authorId, USER_TTL),
     fullReview: async (review, _, { dataSources }) => {
-      const author = await dataSources.users.findOneById(review.authorId)
-      return `${author.firstName} ${author.lastName} gave ${
-        review.stars
-      } stars, saying: "${review.text}"`
+      const author = await dataSources.users.findOneById(
+        review.authorId,
+        USER_TTL
+      )
+      return `${author.firstName} ${author.lastName} gave ${review.stars} stars, saying: "${review.text}"`
     },
     createdAt: review => review._id.getTimestamp()
   },

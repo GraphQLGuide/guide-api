@@ -6,13 +6,15 @@ import dataSources, { Github } from './data-sources'
 import context from './context'
 import formatError from './formatError'
 import { connectToDB } from './db'
+import { cache } from './util/redis'
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   dataSources,
   context,
-  formatError
+  formatError,
+  cache
 })
 
 const start = () => {

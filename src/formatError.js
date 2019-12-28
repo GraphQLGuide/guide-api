@@ -1,8 +1,7 @@
 import get from 'lodash/get'
 
 import { InternalServerError } from './util/errors'
-
-const inProduction = process.env.NODE_ENV === 'production'
+import { inProduction } from './env'
 
 export default error => {
   if (inProduction) {
