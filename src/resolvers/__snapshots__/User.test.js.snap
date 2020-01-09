@@ -4,7 +4,7 @@ exports[`createUser 1`] = `
 Object {
   "data": Object {
     "createUser": Object {
-      "id": "5cf8b6ff37568a1fa500ba4e",
+      "id": "1",
     },
   },
   "errors": undefined,

@@ -1,4 +1,3 @@
-import { pick } from 'lodash'
 import {
   createTestServer,
   createTestClient,
@@ -16,7 +15,7 @@ const ME = gql`
 
 test('me', async () => {
   const { server } = createTestServer({
-    context: () => ({ user: { _id: 'itme' } })
+    context: () => ({ user: { id: 'itme' } })
   })
   const { query } = createTestClient(server)
 
@@ -36,45 +35,12 @@ test('user', async () => {
   const { server } = createTestServer()
   const { query } = createTestClient(server)
 
-  const id = mockUser._id.toString()
+  const id = mockUser.id
   const result = await query({
     query: USER,
     variables: { id }
   })
-  expect(result.data.user.id).toEqual(id)
-})
-
-const SEARCH_USERS = gql`
-  query SearchUsers($term: String!) {
-    searchUsers(term: $term) {
-      ... on User {
-        id
-      }
-    }
-  }
-`
-
-test('searchUsers', async () => {
-  const userA = { _id: 'A' }
-  const userB = { _id: 'B' }
-  const { server, dataSources } = createTestServer()
-
-  dataSources.users.collection.find.mockReturnValueOnce({
-    toArray: jest.fn().mockResolvedValue([userA, userB])
-  })
-
-  const { query } = createTestClient(server)
-
-  const result = await query({
-    query: SEARCH_USERS,
-    variables: { term: 'foo' }
-  })
-
-  expect(dataSources.users.collection.find).toHaveBeenCalledWith({
-    $text: { $search: 'foo' }
-  })
-  expect(result.data.searchUsers[0].id).toEqual('A')
-  expect(result.data.searchUsers[1].id).toEqual('B')
+  expect(result.data.user.id).toEqual(id.toString())
 })
 
 const CREATE_USER = gql`
@@ -89,13 +55,13 @@ test('createUser', async () => {
   const { server } = createTestServer()
   const { mutate } = createTestClient(server)
 
-  const user = pick(mockUser, [
-    'firstName',
-    'lastName',
-    'username',
-    'email',
-    'authId'
-  ])
+  const user = {
+    firstName: mockUser.first_name,
+    lastName: mockUser.last_name,
+    username: mockUser.username,
+    email: mockUser.email,
+    authId: mockUser.auth_id
+  }
 
   const result = await mutate({
     mutation: CREATE_USER,
