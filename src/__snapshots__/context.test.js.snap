@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`context finds a user given a valid jwt 1`] = `
+Object {
+  "auth_id": "mockA|1",
+  "created_at": 1577836800000,
+  "email": "mockA@gmail.com",
+  "first_name": "First",
+  "id": 1,
+  "last_name": "Last",
+  "updated_at": 1577836800000,
+  "username": "mockA",
+}
+`;
