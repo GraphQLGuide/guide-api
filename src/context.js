@@ -1,7 +1,7 @@
 import { AuthenticationError } from 'apollo-server'
 
 import { getAuthIdFromJWT } from './util/auth'
-import { db } from './db'
+import { db } from './data-sources/'
 
 export default async ({ req }) => {
   const context = {}
@@ -22,7 +22,7 @@ export default async ({ req }) => {
       throw new AuthenticationError(message)
     }
 
-    const user = await db.collection('users').findOne({ authId })
+    const user = await db.getUser({ auth_id: authId })
     if (user) {
       context.user = user
     } else {

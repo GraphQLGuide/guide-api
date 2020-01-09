@@ -1,4 +1,5 @@
 import { GraphQLClient } from 'graphql-request'
+import { get } from 'lodash'
 
 import { pubsub } from '../util/pubsub'
 
@@ -20,8 +21,12 @@ query GuideStars {
 
 export default {
   async fetchStarCount() {
-    const data = await githubAPI.request(GUIDE_STARS_QUERY).catch(console.log)
-    return data && data.repository.stargazers.totalCount
+    const data = await githubAPI
+      .request(GUIDE_STARS_QUERY)
+      .catch(
+        e => e.message.includes('API rate limit exceeded') || console.log(e)
+      )
+    return get(data, 'repository.stargazers.totalCount')
   },
 
   startPolling() {

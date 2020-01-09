@@ -9,22 +9,20 @@ const VALID_STARS = [0, 1, 2, 3, 4, 5]
 
 export default {
   Query: {
-    reviews: (_, __, { dataSources }) => dataSources.reviews.all()
+    reviews: (_, __, { dataSources: { db } }) => db.getReviews()
   },
   Review: {
-    id: review => review._id,
-    author: (review, _, { dataSources }) =>
-      dataSources.users.findOneById(review.authorId),
-    fullReview: async (review, _, { dataSources }) => {
-      const author = await dataSources.users.findOneById(review.authorId)
-      return `${author.firstName} ${author.lastName} gave ${
-        review.stars
-      } stars, saying: "${review.text}"`
+    author: (review, _, { dataSources: { db } }) =>
+      db.getUser({ id: review.author_id }),
+    fullReview: async (review, _, { dataSources: { db } }) => {
+      const author = await db.getUser({ id: review.author_id })
+      return `${author.first_name} ${author.last_name} gave ${review.stars} stars, saying: "${review.text}"`
     },
-    createdAt: review => review._id.getTimestamp()
+    createdAt: review => review.created_at,
+    updatedAt: review => review.updated_at
   },
   Mutation: {
-    createReview: (_, { review }, { dataSources, user }) => {
+    createReview: (_, { review }, { dataSources: { db }, user }) => {
       if (!user) {
         throw new ForbiddenError('must be logged in')
       }
@@ -43,7 +41,7 @@ export default {
         throw new InputError({ review: errors })
       }
 
-      const newReview = dataSources.reviews.create(review)
+      const newReview = db.createReview(review)
 
       pubsub.publish('reviewCreated', {
         reviewCreated: newReview

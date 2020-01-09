@@ -5,7 +5,6 @@ import resolvers from './resolvers'
 import dataSources, { Github } from './data-sources'
 import context from './context'
 import formatError from './formatError'
-import { connectToDB } from './db'
 
 const server = new ApolloServer({
   typeDefs,
@@ -16,7 +15,6 @@ const server = new ApolloServer({
 })
 
 const start = () => {
-  connectToDB()
   Github.startPolling()
   server
     .listen({ port: 4000 })
