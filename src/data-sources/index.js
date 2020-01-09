@@ -1,11 +1,16 @@
-import Reviews from './Reviews'
-import Users from './Users'
 import Github from './Github'
-import { db } from '../db'
+import SQL from './SQL'
 
-export default () => ({
-  reviews: new Reviews(db.collection('reviews')),
-  users: new Users(db.collection('users'))
-})
+const knexConfig = {
+  client: 'sqlite3',
+  connection: {
+    filename: './sql/dev.sqlite3'
+  },
+  useNullAsDefault: true
+}
 
-export { Reviews, Users, Github }
+export const db = new SQL(knexConfig)
+
+export default () => ({ db })
+
+export { Github }

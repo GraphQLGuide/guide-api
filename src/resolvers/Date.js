@@ -19,7 +19,7 @@ export default {
         throw new Error('Invalid Date value')
       }
 
-      return date
+      return value
     },
 
     parseLiteral(ast) {
@@ -27,26 +27,25 @@ export default {
         throw new Error('Date literals must be integers')
       }
 
-      const date = new Date(parseInt(ast.value))
-      if (!isValid) {
+      const dateInt = parseInt(ast.value)
+      const date = new Date(dateInt)
+      if (!isValid(date)) {
         throw new Error('Invalid Date literal')
       }
 
-      return date
+      return dateInt
     },
 
     serialize(date) {
-      if (!(date instanceof Date)) {
-        throw new Error(
-          'Resolvers for Date scalars must return JavaScript Date objects'
-        )
+      if (!Number.isInteger(date)) {
+        throw new Error('Resolvers for Date scalars must return integers')
       }
 
-      if (!isValid(date)) {
+      if (!isValid(new Date(date))) {
         throw new Error('Invalid Date scalar')
       }
 
-      return date.getTime()
+      return date
     }
   })
 }
