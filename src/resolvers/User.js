@@ -1,10 +1,16 @@
 import { AuthenticationError, ForbiddenError } from 'apollo-server'
 import { addDays, differenceInDays } from 'date-fns'
+import joinMonster from 'join-monster'
+
+import { knex } from '../data-sources/'
 
 export default {
   Query: {
     me: (_, __, context) => context.user,
-    user: (_, { id }, { dataSources: { db } }) => db.getUser({ id }),
+    user: (_, __, context, info) =>
+      joinMonster(info, context, sql => knex.raw(sql), {
+        dialect: 'sqlite3'
+      }),
     searchUsers: (_, { term }, { dataSources: { db } }) => db.searchUsers(term)
   },
   UserResult: {
@@ -25,8 +31,6 @@ export default {
     }
   },
   User: {
-    firstName: user => user.first_name,
-    lastName: user => user.last_name,
     email(user, _, { user: currentUser }) {
       if (!currentUser || user.id !== currentUser.id) {
         throw new ForbiddenError(`cannot access others' emails`)
@@ -38,9 +42,7 @@ export default {
       // user.auth_id: 'github|1615'
       const githubId = user.auth_id.split('|')[1]
       return `https://avatars.githubusercontent.com/u/${githubId}`
-    },
-    createdAt: user => user.created_at,
-    updatedAt: user => user.updated_at
+    }
   },
   Mutation: {
     createUser(_, { user, secretKey }, { dataSources: { db } }) {

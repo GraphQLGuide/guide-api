@@ -1,25 +1,26 @@
 import { ForbiddenError } from 'apollo-server'
 import { isEmpty } from 'lodash'
+import joinMonster from 'join-monster'
 
 import { InputError } from '../util/errors'
 import { pubsub } from '../util/pubsub'
+import { knex } from '../data-sources/'
 
 const MIN_REVIEW_LENGTH = 2
 const VALID_STARS = [0, 1, 2, 3, 4, 5]
 
 export default {
   Query: {
-    reviews: (_, __, { dataSources: { db } }) => db.getReviews()
+    reviews: (_, __, context, info) =>
+      joinMonster(info, context, sql => knex.raw(sql), {
+        dialect: 'sqlite3'
+      })
   },
   Review: {
-    author: (review, _, { dataSources: { db } }) =>
-      db.getUser({ id: review.author_id }),
     fullReview: async (review, _, { dataSources: { db } }) => {
       const author = await db.getUser({ id: review.author_id })
       return `${author.first_name} ${author.last_name} gave ${review.stars} stars, saying: "${review.text}"`
-    },
-    createdAt: review => review.created_at,
-    updatedAt: review => review.updated_at
+    }
   },
   Mutation: {
     createReview: (_, { review }, { dataSources: { db }, user }) => {
