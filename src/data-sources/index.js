@@ -1,5 +1,6 @@
 import Github from './Github'
 import SQL from './SQL'
+import Knex from 'knex'
 
 const knexConfig = {
   client: 'sqlite3',
@@ -8,6 +9,8 @@ const knexConfig = {
   },
   useNullAsDefault: true
 }
+
+export const knex = Knex(knexConfig)
 
 export const db = new SQL(knexConfig)
 
