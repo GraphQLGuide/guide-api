@@ -30,5 +30,11 @@ export default async ({ req }) => {
     }
   }
 
+  const countryCode = req && req.headers['cf-ipcountry']
+  const invalidCode = ['XX', 'T1'].includes(countryCode)
+  if (countryCode && !invalidCode) {
+    context.countryCode = countryCode
+  }
+
   return context
 }
