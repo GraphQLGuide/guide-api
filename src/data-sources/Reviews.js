@@ -1,8 +1,13 @@
 import { MongoDataSource } from 'apollo-datasource-mongodb'
 
 export default class Reviews extends MongoDataSource {
-  all() {
-    return this.collection.find().toArray()
+  getPage({ skip, limit, orderBy }) {
+    return this.collection
+      .find()
+      .sort({ _id: orderBy === 'createdAt_DESC' ? -1 : 1 })
+      .skip(skip)
+      .limit(limit)
+      .toArray()
   }
 
   create(review) {
