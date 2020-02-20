@@ -6,10 +6,35 @@ import { pubsub } from '../util/pubsub'
 
 const MIN_REVIEW_LENGTH = 2
 const VALID_STARS = [0, 1, 2, 3, 4, 5]
+const MAX_PAGE_SIZE = 100
 
 export default {
   Query: {
-    reviews: (_, __, { dataSources }) => dataSources.reviews.all()
+    reviews: (
+      _,
+      { skip = 0, limit = 10, orderBy = 'createdAt_DESC' },
+      { dataSources }
+    ) => {
+      const errors = {}
+
+      if (skip < 0) {
+        errors.skip = `must be non-negative`
+      }
+
+      if (limit < 0) {
+        errors.limit = `must be non-negative`
+      }
+
+      if (limit > MAX_PAGE_SIZE) {
+        errors.limit = `cannot be greater than ${MAX_PAGE_SIZE}`
+      }
+
+      if (!isEmpty(errors)) {
+        throw new InputError({ review: errors })
+      }
+
+      return dataSources.reviews.getPage({ skip, limit, orderBy })
+    }
   },
   Review: {
     id: review => review._id,

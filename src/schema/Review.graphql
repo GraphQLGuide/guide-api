@@ -8,8 +8,13 @@ type Review {
   updatedAt: Date!
 }
 
+enum ReviewOrderBy {
+  createdAt_ASC
+  createdAt_DESC
+}
+
 extend type Query {
-  reviews: [Review!]!
+  reviews(skip: Int, limit: Int, orderBy: ReviewOrderBy): [Review!]!
 }
 
 type Mutation {
