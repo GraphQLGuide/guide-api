@@ -1,11 +1,18 @@
 import { MongoDataSource } from 'apollo-datasource-mongodb'
+import { ObjectId } from 'mongodb'
 
 export default class Reviews extends MongoDataSource {
-  getPage({ skip, limit, orderBy }) {
+  getPage({ after, limit, orderBy }) {
+    const filter = {}
+    if (after) {
+      const afterId = ObjectId(after)
+      filter._id =
+        orderBy === 'createdAt_DESC' ? { $lt: afterId } : { $gt: afterId }
+    }
+
     return this.collection
-      .find()
+      .find(filter)
       .sort({ _id: orderBy === 'createdAt_DESC' ? -1 : 1 })
-      .skip(skip)
       .limit(limit)
       .toArray()
   }

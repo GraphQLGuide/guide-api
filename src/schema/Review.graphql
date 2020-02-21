@@ -14,7 +14,7 @@ enum ReviewOrderBy {
 }
 
 extend type Query {
-  reviews(skip: Int, limit: Int, orderBy: ReviewOrderBy): [Review!]!
+  reviews(after: ID, limit: Int, orderBy: ReviewOrderBy): [Review!]!
 }
 
 type Mutation {
