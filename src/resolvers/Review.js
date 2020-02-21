@@ -12,14 +12,10 @@ export default {
   Query: {
     reviews: (
       _,
-      { skip = 0, limit = 10, orderBy = 'createdAt_DESC' },
+      { after, limit = 10, orderBy = 'createdAt_DESC' },
       { dataSources }
     ) => {
       const errors = {}
-
-      if (skip < 0) {
-        errors.skip = `must be non-negative`
-      }
 
       if (limit < 0) {
         errors.limit = `must be non-negative`
@@ -33,7 +29,7 @@ export default {
         throw new InputError({ review: errors })
       }
 
-      return dataSources.reviews.getPage({ skip, limit, orderBy })
+      return dataSources.reviews.getPage({ after, limit, orderBy })
     }
   },
   Review: {
