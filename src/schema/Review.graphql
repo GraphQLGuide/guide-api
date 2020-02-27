@@ -13,8 +13,26 @@ enum ReviewOrderBy {
   createdAt_DESC
 }
 
+type ReviewEdge {
+  cursor: String!
+  node: Review
+}
+
+type PageInfo {
+  startCursor: String!
+  endCursor: String!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+type ReviewsConnection {
+  edges: [ReviewEdge]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 extend type Query {
-  reviews(after: ID, limit: Int, orderBy: ReviewOrderBy): [Review!]!
+  reviews(first: Int, after: String, orderBy: ReviewOrderBy, stars: Int): ReviewsConnection!
 }
 
 type Mutation {

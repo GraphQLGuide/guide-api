@@ -3,6 +3,7 @@ import { isEmpty } from 'lodash'
 
 import { InputError } from '../util/errors'
 import { pubsub } from '../util/pubsub'
+import { encodeCursor } from '../util/pagination'
 
 const MIN_REVIEW_LENGTH = 2
 const VALID_STARS = [0, 1, 2, 3, 4, 5]
@@ -10,27 +11,54 @@ const MAX_PAGE_SIZE = 100
 
 export default {
   Query: {
-    reviews: (
+    reviews: async (
       _,
-      { after, limit = 10, orderBy = 'createdAt_DESC' },
+      { first = 10, after, orderBy = 'createdAt_DESC', stars },
       { dataSources }
     ) => {
       const errors = {}
 
-      if (limit < 0) {
-        errors.limit = `must be non-negative`
+      if (first !== undefined && first < 1) {
+        errors.first = `must be non-negative`
       }
 
-      if (limit > MAX_PAGE_SIZE) {
-        errors.limit = `cannot be greater than ${MAX_PAGE_SIZE}`
+      if (first > MAX_PAGE_SIZE) {
+        errors.first = `cannot be greater than ${MAX_PAGE_SIZE}`
+      }
+
+      if (stars !== undefined && ![0, 1, 2, 3, 4, 5].includes(stars)) {
+        errors.stars = `must be an integer between 0 and 5, inclusive`
       }
 
       if (!isEmpty(errors)) {
         throw new InputError({ review: errors })
       }
 
-      return dataSources.reviews.getPage({ after, limit, orderBy })
+      const {
+        reviews,
+        hasNextPage,
+        getHasPreviousPage
+      } = await dataSources.reviews.getPage({ first, after, orderBy, stars })
+
+      const edges = reviews.map(review => ({
+        cursor: encodeCursor(review),
+        node: review
+      }))
+
+      return {
+        edges,
+        pageInfo: {
+          startCursor: encodeCursor(reviews[0]),
+          endCursor: encodeCursor(reviews[reviews.length - 1]),
+          hasNextPage,
+          getHasPreviousPage
+        },
+        totalCount: dataSources.reviews.getCount({ stars })
+      }
     }
+  },
+  PageInfo: {
+    hasPreviousPage: ({ getHasPreviousPage }) => getHasPreviousPage()
   },
   Review: {
     id: review => review._id,
