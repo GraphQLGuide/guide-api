@@ -51,6 +51,10 @@ export default {
       return user.email
     },
     photo(user) {
+      if (user.photo) {
+        return user.photo
+      }
+
       // user.authId: 'github|1615'
       const githubId = user.authId.split('|')[1]
       return `https://avatars.githubusercontent.com/u/${githubId}`
@@ -64,6 +68,13 @@ export default {
       }
 
       return dataSources.users.create(user)
+    },
+    setMyPhoto(_, { path }, { user, dataSources }) {
+      if (!user) {
+        throw new ForbiddenError('must be logged in')
+      }
+
+      return dataSources.users.setPhoto(path)
     }
   }
 }
