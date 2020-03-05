@@ -20,4 +20,14 @@ export default class Users extends MongoDataSource {
   search(term) {
     return this.collection.find({ $text: { $search: term } }).toArray()
   }
+
+  async setPhoto(path) {
+    const { user } = this.context
+    const photo = `https://res.cloudinary.com/graphql/${path}`
+    await this.collection.updateOne({ _id: user._id }, { $set: { photo } })
+    return {
+      ...user,
+      photo
+    }
+  }
 }

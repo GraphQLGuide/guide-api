@@ -17,6 +17,7 @@ extend type Query {
 
 extend type Mutation {
   createUser(user: CreateUserInput!, secretKey: String!): User
+  setMyPhoto(path: String!): User!
 }
 
 input CreateUserInput {
