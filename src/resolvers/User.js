@@ -3,9 +3,12 @@ import { ObjectId } from 'mongodb'
 import { addDays, differenceInDays } from 'date-fns'
 
 import { InputError } from '../util/errors'
+import s3 from '../util/s3'
 
 const OBJECT_ID_ERROR =
   'Argument passed in must be a single String of 12 bytes or a string of 24 hex characters'
+
+const IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
 export default {
   Query: {
@@ -74,7 +77,31 @@ export default {
         throw new ForbiddenError('must be logged in')
       }
 
-      return dataSources.users.setPhoto(path)
+      return dataSources.users.setPhoto(
+        `https://res.cloudinary.com/graphql/${path}`
+      )
+    },
+    uploadMyPhoto: async (_, { file }, { user, dataSources }) => {
+      if (!user) {
+        throw new ForbiddenError('must be logged in')
+      }
+
+      const { createReadStream, filename, mimetype } = await file
+
+      if (!IMAGE_MIME_TYPES.includes(mimetype)) {
+        throw new InputError({ file: 'must be an image file' })
+      }
+
+      const stream = createReadStream()
+      const { Location: fileUrl } = await s3
+        .upload({
+          Bucket: 'guide-user-photos',
+          Key: filename,
+          Body: stream
+        })
+        .promise()
+
+      return dataSources.users.setPhoto(fileUrl)
     }
   }
 }
