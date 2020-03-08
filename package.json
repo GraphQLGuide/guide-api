@@ -1,51 +1,23 @@
 {
   "name": "guide-api",
   "version": "0.1.0",
-  "description": "api.graphql.guide",
   "scripts": {
-    "dev": "nodemon -e js,graphql --exec 'npm run update-graphql-imports && babel-node src/index.js'",
-    "start": "node dist/index.js",
-    "build": "babel src -d dist --ignore **/*.test.js",
-    "update-graphql-imports": "rm -rf ./node_modules/.cache/@babel",
-    "lint": "eslint src/",
-    "test": "jest --coverage",
-    "open-coverage": "open coverage/lcov-report/index.html"
+    "start": "babel-watch gateway.js",
+    "start-service-users": "babel-watch services/users/index.js",
+    "start-service-reviews": "babel-watch services/reviews/index.js",
+    "start-services": "concurrently \"npm:start-service-*\"",
+    "postinstall": "lerna bootstrap"
   },
   "engines": {
     "node": ">=8"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint"
-    }
-  },
   "dependencies": {
-    "apollo-datasource-mongodb": "0.2.0",
-    "apollo-server": "2.9.6",
-    "apollo-server-testing": "2.9.6",
-    "date-fns": "2.5.1",
-    "dotenv": "8.2.0",
-    "graphql": "14.5.8",
-    "graphql-request": "1.8.2",
+    "@apollo/gateway": "0.13.2",
+    "apollo-server": "2.11.0",
     "jsonwebtoken": "8.5.1",
-    "jwks-rsa": "1.6.0",
-    "lodash": "4.17.15",
-    "mongodb": "3.3.3"
-  },
-  "devDependencies": {
-    "@babel/cli": "7.6.4",
-    "@babel/core": "7.6.4",
-    "@babel/node": "7.6.3",
-    "@babel/preset-env": "7.6.3",
-    "apollo-link": "1.2.13",
-    "apollo-link-http": "1.5.16",
-    "babel-plugin-import-graphql": "2.7.0",
-    "eslint": "6.5.1",
-    "eslint-plugin-node": "10.0.0",
-    "husky": "3.0.9",
-    "jest": "24.9.0",
-    "node-fetch": "2.6.0",
-    "nodemon": "1.19.4"
+    "jwks-rsa": "1.7.0",
+    "mongodb": "3.5.4",
+    "util": "0.12.2"
   },
   "homepage": "https://github.com/GraphQLGuide/guide-api",
   "repository": {
@@ -56,5 +28,11 @@
     "url": "https://github.com/GraphQLGuide/guide-api/issues"
   },
   "private": true,
-  "author": "The GraphQL Guide <hi@graphql.guide> (https://graphql.guide)"
+  "author": "The GraphQL Guide <hi@graphql.guide> (https://graphql.guide)",
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "babel-watch": "^7.0.0",
+    "concurrently": "^5.1.0",
+    "lerna": "^3.20.2"
+  }
 }

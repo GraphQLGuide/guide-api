@@ -8,6 +8,5 @@
         }
       }
     ]
-  ],
-  "plugins": ["import-graphql"]
+  ]
 }

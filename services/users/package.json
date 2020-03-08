@@ -1,0 +1,9 @@
+{
+  "name": "guide-api-users",
+  "dependencies": {
+    "@apollo/federation": "0.13.2",
+    "apollo-datasource-mongodb": "0.2.1",
+    "apollo-server": "2.11.0",
+    "mongodb": "3.5.4"
+  }
+}
