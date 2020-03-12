@@ -11,10 +11,14 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
 }
 
 const gateway = new ApolloGateway({
-  serviceList: [{ name: 'users', url: 'http://localhost:4001/graphql' }],
+  serviceList: [
+    { name: 'users', url: 'http://localhost:4001/graphql' },
+    { name: 'reviews', url: 'http://localhost:4002/graphql' }
+  ],
   buildService({ url }) {
     return new AuthenticatedDataSource({ url })
-  }
+  },
+  __exposeQueryPlanExperimental: true
 })
 
 const server = new ApolloServer({

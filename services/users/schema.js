@@ -18,4 +18,12 @@ export default gql`
     createdAt: Date!
     updatedAt: Date!
   }
+
+  extend type Review @key(fields: "id") {
+    id: ID! @external
+    text: String! @external
+    stars: Int @external
+    authorId: ID! @external
+    fullReview: String! @requires(fields: "authorId text stars")
+  }
 `

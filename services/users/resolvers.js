@@ -40,5 +40,13 @@ export default {
       return `https://avatars.githubusercontent.com/u/${githubId}`
     },
     createdAt: user => user._id.getTimestamp()
+  },
+  Review: {
+    fullReview: async (review, _, { dataSources }) => {
+      const author = await dataSources.users.findOneById(
+        ObjectId(review.authorId)
+      )
+      return `${author.firstName} ${author.lastName} gave ${review.stars} stars, saying: "${review.text}"`
+    }
   }
 }
