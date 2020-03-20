@@ -2,7 +2,7 @@ import { merge } from 'lodash'
 
 const resolvers = {
   Query: {
-    hello: () => '🌍🌏🌎',
+    hello: () => 'world 🌍🌏🌎',
     isoString: (_, { date }) => date.toISOString()
   }
 }

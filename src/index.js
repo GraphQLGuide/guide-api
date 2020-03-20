@@ -6,9 +6,11 @@ import dataSources, { Github } from './data-sources'
 import context from './context'
 import formatError from './formatError'
 import { connectToDB } from './db'
+import schemaDirectives from './directives'
 
 const server = new ApolloServer({
   typeDefs,
+  schemaDirectives,
   resolvers,
   dataSources,
   context,

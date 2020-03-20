@@ -1,7 +1,29 @@
 scalar Date
 
+directive @tshirt on ENUM_VALUE
+directive @upper on FIELD_DEFINITION
+directive @auth(
+  requires: Role = ADMIN,
+) on OBJECT | FIELD_DEFINITION
+
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+enum Package {
+  BASIC
+  PRO
+  FULL @tshirt
+  TRAINING @tshirt
+
+  # Group license.
+  TEAM @tshirt
+}
+
 type Query {
-  hello(date: Date): String!
+  hello(date: Date): String! @upper
   isoString(date: Date!): String!
 }
 
