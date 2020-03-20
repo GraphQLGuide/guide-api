@@ -1,6 +1,6 @@
 const resolvers = {
   Query: {
-    hello: () => '🌍🌏🌎',
+    hello: () => 'world 🌍🌏🌎',
     isoString: (_, { date }) => date.toISOString()
   }
 }

@@ -1,9 +1,9 @@
-type User {
+type User @auth(requires: USER) {
   id: ID!
   firstName: String!
   lastName: String!
   username: String!
-  email: String
+  email: String @auth(requires: ADMIN)
   photo: String!
   createdAt: Date!
   updatedAt: Date!
