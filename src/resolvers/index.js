@@ -1,5 +1,3 @@
-import { merge } from 'lodash'
-
 const resolvers = {
   Query: {
     hello: () => '🌍🌏🌎'
@@ -9,8 +7,4 @@ const resolvers = {
 import Review from './Review'
 import User from './User'
 
-const resolversByType = [Review, User]
-
-resolversByType.forEach(type => merge(resolvers, type))
-
-export default resolvers
+export default [resolvers, Review, User]
