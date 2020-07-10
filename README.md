@@ -2,7 +2,7 @@
 
 If you'd like to read the GraphQL Guide, and if you can afford to purchase it or if your company reimburses you for educational materials (most do 👍), we would value your support: [https://graphql.guide](https://graphql.guide).
 
-## Chapter 11
+## Chapter 11: Server
 
 Numbered branches (`0` and up) have the most up-to-date code (often newer than the most recent published revision of the book). When code has changed between book revisions, a new code version is created, and each branch is tagged, with the naming format `[step]_[version]`. For instance, revision `r4` of the book was published with version `0.1.0` of this repo, so the tag for step 5 was [`5_0.1.0`](https://github.com/GraphQLGuide/guide-api/releases/tag/5_0.1.0).
 
@@ -19,8 +19,6 @@ We welcome issues and PRs! For large changes, we recommend opening an issue firs
 When editing code that's part of the book, submit the PR to the corresponding step branch (eg branch `3` for step 3) instead of to `master`.
 
 ![Github PR creation](https://res.cloudinary.com/graphql/pr-base.png)
-
-
 
 *Setting the base branch to step `3`*
 
