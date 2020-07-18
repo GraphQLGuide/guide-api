@@ -21,7 +21,7 @@
     "graphql-request": "1.8.2",
     "jsonwebtoken": "8.5.1",
     "jwks-rsa": "1.6.0",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "mongodb": "3.3.3"
   },
   "devDependencies": {
