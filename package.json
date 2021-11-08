@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "apollo-datasource-mongodb": "0.2.0",
-    "apollo-server": "2.9.6",
+    "apollo-server": "2.25.3",
     "apollo-server-testing": "2.9.6",
     "date-fns": "2.5.1",
     "dotenv": "8.2.0",
